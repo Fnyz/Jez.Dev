@@ -150,8 +150,8 @@ function downloadCV(e) {
   e.preventDefault();
   // Simulate file download (replace with actual file URL in production)
   var link = document.createElement('a');
-  link.href = '/src/files/Jezreel_Busico_Resume(Developer).pdf'; // Replace with actual CV file URL
-  link.download = 'Jezreel_Busico_Resume(Developer).pdf';
+  link.href = '/src/files/Busico_Jezreel_Developer(CBU).pdf'; // Replace with actual CV file URL
+  link.download = 'Busico_Jezreel_Developer(CBU).pdf';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
