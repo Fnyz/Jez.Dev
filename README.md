@@ -1,6 +1,6 @@
 # Jez.Dev — Portfolio Website
 
-Personal portfolio website of **Jezreel D. Busico**, a Full-Stack Developer based in Cebu City, Philippines. Built as a single-page application using vanilla HTML, CSS, and JavaScript — no build tools or frameworks required.
+Personal portfolio website of **Jezreel D. Busico**, a Web Developer based in Cebu City, Philippines. Built as a single-page application using vanilla HTML, CSS, and JavaScript — no build tools or frameworks required.
 
 ---
 
@@ -51,7 +51,7 @@ Jez.Dev/
     ├── script.js           # All JavaScript logic
     ├── data.js             # Case study content (CS_DATA object)
     └── files/
-        └── Busico_Jezreel_Developer(CBU).pdf   # Downloadable resume
+        └── Jezreel_D_Busico_DEVELOPER.pdf      # Downloadable resume
 ```
 
 ---

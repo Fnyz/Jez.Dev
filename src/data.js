@@ -8,25 +8,25 @@ var CS_DATA = {
     title:    'NativeCamp Platform',
     color:    '#1a56db',
     meta: [
-      { key: 'Role',      val: 'Backend Developer' },
-      { key: 'Company',   val: 'Forty Degree Celcius, Inc.' },
+      { key: 'Role',      val: 'Web Developer' },
+      { key: 'Company',   val: 'Forty Degrees Celsius, Inc.' },
       { key: 'Duration',  val: 'Jun 2024 – Present' },
       { key: 'Team Size', val: '5–10 Engineers' },
     ],
-    overview: 'NativeCamp is a large-scale Japanese online English conversation platform with millions of users. As a backend developer at Forty Degree Celcius, Inc., I joined the maintenance and feature development team responsible for platform stability and new capabilities.',
-    challenge: 'The main challenges included working within a large existing codebase using CakePHP and Angular, understanding complex business logic around lesson scheduling and user roles, and delivering bug fixes without disrupting active users.',
+    overview: 'NativeCamp is a Japanese online English conversation platform serving thousands of active users. As a web developer at Forty Degrees Celsius, Inc., I build and maintain production features on the team responsible for platform stability and new capabilities.',
+    challenge: 'The main challenges included working within a large existing codebase using CakePHP and Angular, understanding complex business logic around lesson scheduling and user roles, keeping high-traffic endpoints fast, and shipping changes without disrupting active users.',
     contributions: [
-      'Developed and integrated new feature modules into the existing CakePHP backend',
-      'Implemented and extended role-based access control for different user tiers',
-      'Investigated and resolved production bugs reported by QA and end users',
-      'Collaborated with frontend engineers to align API contracts with Angular components',
-      'Participated in code reviews and team standups in an Agile workflow',
+      'Built and maintained production features in CakePHP, Angular, and JavaScript following MVC architecture',
+      'Implemented role-based access control (RBAC), admin management pages, and backend API integrations',
+      'Cut average query response time by ~40% on high-traffic endpoints by routing reads to a MySQL read replica',
+      'Wrote 50+ Codeception unit tests and Playwright E2E test cases, reducing production bugs by 25% before release',
+      'Integrated Firebase Analytics &amp; Crashlytics across GA4 L1/L2/L3 event hierarchies, verified with DebugView',
+      'Managed Docker containers for local development and deployed to Linux servers with CLI and shell scripting',
     ],
-    outcome: 'Maintained high platform reliability with zero critical downtime during my involvement. Delivered feature increments on schedule across multiple sprint cycles.',
-    tags: ['CakePHP', 'Angular', 'jQuery', 'JavaScript', 'HTML/CSS', 'MySQL', 'REST API'],
+    outcome: 'Improved overall system reliability by 30%+ while consistently delivering features on sprint deadlines through Git workflows, pull requests, and code reviews.',
+    tags: ['CakePHP', 'Angular', 'JavaScript', 'MySQL', 'Codeception', 'Playwright', 'Docker', 'Firebase Analytics'],
     github: 'javascript:void(0)', // No public repo for this project
     live:   'https://nativecamp.net/',
-    svgBg:  '#eef3ff', svgAc: '#1a56db', svgType: 'dashboard',
   },
 
   workwisehr: {
@@ -36,7 +36,7 @@ var CS_DATA = {
     meta: [
       { key: 'Role',      val: 'Full-Stack Developer' },
       { key: 'Company',   val: 'Onsource, Inc.' },
-      { key: 'Duration',  val: '3 Months (Internship)' },
+      { key: 'Duration',  val: 'Feb – May 2024' },
       { key: 'Team Size', val: 'Solo + Supervisor' },
     ],
     overview: 'WorkwiseHR is a comprehensive HR information system developed during my internship at Onsource, Inc. The system automates core HR processes including employee records, attendance tracking, leave management, and payroll computation.',
@@ -45,18 +45,17 @@ var CS_DATA = {
       'Architected the full system from database schema to frontend UI',
       'Built RESTful APIs using Laravel for all HR modules',
       'Implemented JWT-based authentication with role-based permissions (HR Admin, Employee, Manager)',
-      'Optimised MySQL queries for payroll computation involving multiple deduction rules',
+      'Optimized the MySQL schema and queries for payroll and HR modules, improving system response time by 35%',
       'Designed a React.js frontend with role-conditional views and dashboards',
     ],
-    outcome: 'Delivered a fully functional HR system within the internship period. Received commendation from the supervising engineer for code quality and system architecture.',
+    outcome: 'Reduced manual HR processing time by 50%. Delivered a fully functional HR system within the internship period and received commendation from the supervising engineer for code quality and system architecture.',
     tags: ['Laravel', 'React.js', 'MySQL', 'REST API', 'JWT', 'PHP'],
     github: 'javascript:void(0)',
     live:   'https://workwise-hr-front-end.vercel.app/login',
-    svgBg:  '#f0fdf4', svgAc: '#16a34a', svgType: 'hrm',
   },
 
   iot: {
-    label:    '03 — Thesis Project',
+    label:    '05 — Thesis Project',
     title:    'IoT Pet Feeding System',
     color:    '#d97706',
     meta: [
@@ -78,11 +77,10 @@ var CS_DATA = {
     tags: ['Next.js', 'React Native', 'Firebase', 'IoT', 'Realtime DB', 'Push Notifications'],
     github: 'javascript:void(0)',
     live:   null,
-    svgBg:  '#fefce8', svgAc: '#d97706', svgType: 'iot',
   },
 
   animist: {
-    label:    '04 — Mobile App',
+    label:    '06 — Mobile App',
     title:    'Animist Anime Streaming App',
     color:    '#9333ea',
     meta: [
@@ -104,11 +102,10 @@ var CS_DATA = {
     tags: ['React Native', 'AsyncStorage', 'REST API', 'NoSQL', 'iOS', 'Android'],
     github: 'javascript:void(0)',
     live:   null,
-    svgBg:  '#fdf2f8', svgAc: '#9333ea', svgType: 'mobile',
   },
 
   inventory: {
-    label:    '05 — Inventory System',
+    label:    '07 — Inventory System',
     title:    'Computer Parts Inventory System',
     color:    '#ea580c',
     meta: [
@@ -130,11 +127,10 @@ var CS_DATA = {
     tags: ['PHP', 'JavaScript', 'jQuery', 'MySQL', 'Bootstrap', 'AJAX'],
     github: 'javascript:void(0)',
     live:   null,
-    svgBg:  '#fff7ed', svgAc: '#ea580c', svgType: 'inventory',
   },
 
   aar9speed: {
-    label:    '06 — Sales System',
+    label:    '08 — Sales System',
     title:    'AAR9SPEED Sales & Inventory System',
     color:    '#0284c7',
     meta: [
@@ -156,6 +152,57 @@ var CS_DATA = {
     tags: ['PHP', 'JavaScript', 'jQuery', 'MySQL', 'Bootstrap', 'AJAX', 'FPDF'],
     github: 'javascript:void(0)',
     live:   null,
-    svgBg:  '#f0f9ff', svgAc: '#0284c7', svgType: 'sales',
+  },
+
+  taskapi: {
+    label:    '03 — REST API',
+    title:    'Task Manager API',
+    color:    '#0d9488',
+    meta: [
+      { key: 'Role',      val: 'Backend Developer' },
+      { key: 'Context',   val: 'Personal Project' },
+      { key: 'Deployment', val: 'Render (Docker)' },
+      { key: 'Stack',     val: 'Laravel + PostgreSQL' },
+    ],
+    overview: 'A RESTful API for managing tasks and categories. Each user owns their own data behind token-based authentication, with email verification required before protected resources can be accessed.',
+    challenge: 'Keeping every user\'s tasks and categories strictly isolated while still offering flexible querying — filtering, free-text search, sorting, and pagination — and shipping it as a production-ready container.',
+    contributions: [
+      'Implemented registration and login with Laravel Sanctum API tokens and required email verification',
+      'Built full CRUD for tasks and categories, enforced per user through policies',
+      'Added soft deletes with restore endpoints for both tasks and categories',
+      'Built task filtering by category, completion status, date range, and search, with sorting and pagination',
+      'Sent a database notification when a task is marked complete, and rate-limited auth and API routes',
+      'Containerized the app with Docker (PHP-FPM, nginx, supervisor) and deployed it to Render',
+    ],
+    outcome: 'Delivered a deployed, test-covered API that demonstrates secure multi-user data access, clean resource design, and a container-based deployment pipeline.',
+    tags: ['Laravel', 'PHP', 'Sanctum', 'PostgreSQL', 'Docker', 'PHPUnit', 'REST API'],
+    github: 'https://github.com/Fnyz/Task-manage-api-laravel',
+    live:   null,
+  },
+
+  ecommerceapi: {
+    label:    '04 — REST API',
+    title:    'E-Commerce API',
+    color:    '#e11d48',
+    meta: [
+      { key: 'Role',      val: 'Backend Developer' },
+      { key: 'Context',   val: 'Personal Project' },
+      { key: 'Deployment', val: 'Render (Docker)' },
+      { key: 'Stack',     val: 'Laravel + PostgreSQL' },
+    ],
+    overview: 'A RESTful e-commerce backend covering the full purchase flow: authentication, product and category catalogue, cart, orders, Stripe payments, and real-time order updates.',
+    challenge: 'Turning a cart into a paid order reliably — handing checkout off to Stripe, confirming payment through webhooks, and pushing order status changes to customers in real time.',
+    contributions: [
+      'Built Sanctum bearer-token auth with separate customer and admin access',
+      'Created product and category endpoints with public browsing and admin-only management',
+      'Implemented a cart with add, update quantity, remove, and clear actions',
+      'Built order creation from the cart and Stripe checkout, confirmed through a Stripe webhook',
+      'Broadcast real-time order updates over WebSockets with Laravel Reverb',
+      'Added an admin dashboard with stats, an all-orders view, and order status updates',
+    ],
+    outcome: 'Delivered a deployed e-commerce API that handles the full flow from browsing to payment, with real-time updates and admin tooling.',
+    tags: ['Laravel', 'PHP', 'Sanctum', 'Stripe', 'Laravel Reverb', 'WebSockets', 'PostgreSQL', 'Docker'],
+    github: 'https://github.com/Fnyz/ecommerce-api',
+    live:   null,
   },
 };

@@ -103,45 +103,34 @@ window.addEventListener('load', ()=> {
   },1000);
 });
 
-// Hamburger menu toggle
- const hamburger = document.querySelector('.hamburger');
-  const menu = document.getElementById('mobile-menu');
-  const checkbox = hamburger ? hamburger.querySelector('input[type="checkbox"]') : null;
-  
-  if (hamburger && menu && checkbox) {
-    checkbox.addEventListener('change', function () {
-      if (this.checked) {
-        menu.classList.add('open');
-        hamburger.classList.add('active');
-      } else {
-        menu.classList.remove('open');
-        hamburger.classList.remove('active');
-      }
-    });
-  }
-
 /* ═══════════════════════════════════════════
    GLOBAL FUNCTIONS — must be at window scope
    because HTML onclick="" attributes call them
    ═══════════════════════════════════════════ */
 
-/* Mobile menu */
-function toggleMenu() {
-  const menu = document.getElementById('mobile-menu');
-  const hamburger = document.querySelector('.hamburger');
-  const checkbox = hamburger ? hamburger.querySelector('input[type="checkbox"]') : null;
-  
-  menu.classList.toggle('open');
-  if (hamburger) hamburger.classList.toggle('active');
-  if (checkbox) checkbox.checked = !checkbox.checked;
+/* Mobile menu (sidebar drawer) */
+function toggleMenu(force) {
+  var open = typeof force === 'boolean' ? force : !document.body.classList.contains('menu-open');
+  document.body.classList.toggle('menu-open', open);
+  var btn = document.getElementById('menu-btn');
+  if (btn) {
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.textContent = open ? 'Close' : 'Menu';
+  }
 }
+function closeMenu() { toggleMenu(false); }
 
 /* Dark mode */
+function setDarkIcons(isDark) {
+  document.querySelectorAll('.dark-icon').forEach(function (icon) {
+    icon.classList.toggle('fa-moon', !isDark);
+    icon.classList.toggle('fa-sun', isDark);
+  });
+}
 function toggleDark() {
   var isDark = !document.body.classList.contains('dark');
   document.body.classList.toggle('dark', isDark);
-  var icon = document.getElementById('darkIcon');
-  if (icon) icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+  setDarkIcons(isDark);
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
@@ -150,8 +139,8 @@ function downloadCV(e) {
   e.preventDefault();
   // Simulate file download (replace with actual file URL in production)
   var link = document.createElement('a');
-  link.href = '/src/files/Busico_Jezreel_Developer(CBU).pdf'; // Replace with actual CV file URL
-  link.download = 'Busico_Jezreel_Developer(CBU).pdf';
+  link.href = '/src/files/Jezreel_D_Busico_DEVELOPER.pdf';
+  link.download = 'Jezreel_D_Busico_DEVELOPER.pdf';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -215,43 +204,8 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Apply saved dark theme */
   if (localStorage.getItem('theme') === 'dark') {
     document.body.classList.add('dark');
-    var icon = document.getElementById('darkIcon');
-    if (icon) icon.className = 'fa-solid fa-sun';
+    setDarkIcons(true);
   }
-
-  /* ── Typing effect ── */
-  var phrases = [
-    'Robust backend APIs.',
-    'Scalable web applications.',
-    'Intuitive mobile apps.',
-    'Clean database architecture.',
-    'Full-stack solutions.'
-  ];
-  var phraseIdx = 0, charIdx = 0, deleting = false;
-  var typingEl = document.getElementById('typing-text');
-
-  function type() {
-    if (!typingEl) return;
-    var current = phrases[phraseIdx];
-    if (!deleting) {
-      charIdx++;
-      typingEl.textContent = current.slice(0, charIdx);
-      if (charIdx === current.length) {
-        deleting = true;
-        setTimeout(type, 1800);
-        return;
-      }
-    } else {
-      charIdx--;
-      typingEl.textContent = current.slice(0, charIdx);
-      if (charIdx === 0) {
-        deleting = false;
-        phraseIdx = (phraseIdx + 1) % phrases.length;
-      }
-    }
-    setTimeout(type, deleting ? 45 : 80);
-  }
-  setTimeout(type, 900);
 
   /* ── Back to top ── */
   var btt = document.getElementById('back-to-top');
@@ -270,11 +224,15 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ── Active nav highlight ── */
   var sections = document.querySelectorAll('section[id]');
   var navLinks = document.querySelectorAll('.nav-link');
-  window.addEventListener('scroll', function () {
-    var current = '';
+  function highlightNav() {
+    var current = sections.length ? sections[0].getAttribute('id') : '';
     sections.forEach(function (s) {
       if (window.pageYOffset >= s.offsetTop - 120) current = s.getAttribute('id');
     });
+    /* The last section is too short to reach the top — highlight it at the bottom of the page */
+    if (sections.length && window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 4) {
+      current = sections[sections.length - 1].getAttribute('id');
+    }
     navLinks.forEach(function (link) {
       link.style.color = '';
       if (link.getAttribute('href') === '#' + current) {
@@ -283,7 +241,9 @@ document.addEventListener('DOMContentLoaded', function () {
         link.classList.remove('active');
       }
     });
-  }, { passive: true });
+  }
+  window.addEventListener('scroll', highlightNav, { passive: true });
+  highlightNav();
 
   /* ── Scroll reveal ── */
   if ('IntersectionObserver' in window) {
@@ -299,21 +259,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
   }
 
-  /* ── Proficiency bars ── */
-  if ('IntersectionObserver' in window) {
-    var barObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          var fill = entry.target.querySelector('.prof-bar-fill');
-          if (fill) fill.style.width = fill.dataset.width + '%';
-          barObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.3 });
-    document.querySelectorAll('.prof-bar-wrap').forEach(function (wrap) {
-      barObserver.observe(wrap);
-    });
-  }
 
   /* ── Start carousel auto-play ── */
   var carouselEl = document.getElementById('testimonialCarousel');
@@ -411,17 +356,26 @@ document.addEventListener('DOMContentLoaded', function () {
      CS_DATA object is now globally available from /src/data.js
   ──────────────────────────────────────────────────────────────── */
 
-  /* ── SVG mockup generator (matches project cards) ──────────────── */
-  function makeSVG(bg, ac, type) {
-    var svgs = {
-      dashboard: '<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="220" fill="' + bg + '"/><rect width="600" height="26" fill="' + ac + '" opacity="0.15"/><circle cx="14" cy="13" r="4" fill="#ef4444" opacity="0.7"/><circle cx="26" cy="13" r="4" fill="#f59e0b" opacity="0.7"/><circle cx="38" cy="13" r="4" fill="#22c55e" opacity="0.7"/><rect x="56" y="7" width="240" height="12" rx="6" fill="white" opacity="0.45"/><rect x="0" y="26" width="100" height="194" fill="' + ac + '" opacity="0.1"/><rect x="10" y="42" width="55" height="7" rx="3" fill="' + ac + '" opacity="0.5"/><rect x="114" y="34" width="110" height="48" rx="5" fill="white" opacity="0.65"/><rect x="238" y="34" width="110" height="48" rx="5" fill="white" opacity="0.65"/><rect x="362" y="34" width="110" height="48" rx="5" fill="white" opacity="0.65"/><rect x="476" y="34" width="112" height="48" rx="5" fill="white" opacity="0.65"/><rect x="124" y="44" width="40" height="5" rx="2" fill="' + ac + '" opacity="0.4"/><rect x="124" y="56" width="65" height="12" rx="3" fill="' + ac + '" opacity="0.6"/><rect x="248" y="44" width="40" height="5" rx="2" fill="' + ac + '" opacity="0.4"/><rect x="248" y="56" width="55" height="12" rx="3" fill="' + ac + '" opacity="0.6"/><rect x="372" y="44" width="40" height="5" rx="2" fill="' + ac + '" opacity="0.4"/><rect x="372" y="56" width="60" height="12" rx="3" fill="' + ac + '" opacity="0.6"/><rect x="486" y="44" width="40" height="5" rx="2" fill="' + ac + '" opacity="0.4"/><rect x="486" y="56" width="50" height="12" rx="3" fill="' + ac + '" opacity="0.6"/><rect x="114" y="94" width="310" height="120" rx="5" fill="white" opacity="0.5"/><rect x="140" y="128" width="18" height="72" rx="2" fill="' + ac + '" opacity="0.3"/><rect x="165" y="115" width="18" height="85" rx="2" fill="' + ac + '" opacity="0.5"/><rect x="190" y="106" width="18" height="94" rx="2" fill="' + ac + '" opacity="0.7"/><rect x="215" y="120" width="18" height="80" rx="2" fill="' + ac + '" opacity="0.4"/><rect x="240" y="112" width="18" height="88" rx="2" fill="' + ac + '" opacity="0.55"/><rect x="265" y="104" width="18" height="96" rx="2" fill="' + ac + '" opacity="0.75"/><rect x="436" y="94" width="152" height="120" rx="5" fill="white" opacity="0.5"/></svg>',
-      hrm: '<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="220" fill="' + bg + '"/><rect width="600" height="26" fill="' + ac + '" opacity="0.18"/><circle cx="14" cy="13" r="4" fill="#ef4444" opacity="0.7"/><circle cx="26" cy="13" r="4" fill="#f59e0b" opacity="0.7"/><circle cx="38" cy="13" r="4" fill="#22c55e" opacity="0.7"/><rect x="14" y="36" width="120" height="44" rx="5" fill="white" opacity="0.6"/><rect x="148" y="36" width="120" height="44" rx="5" fill="white" opacity="0.6"/><rect x="282" y="36" width="120" height="44" rx="5" fill="white" opacity="0.6"/><rect x="416" y="36" width="170" height="44" rx="5" fill="white" opacity="0.6"/><rect x="24" y="46" width="45" height="5" rx="2" fill="' + ac + '" opacity="0.4"/><rect x="24" y="58" width="80" height="10" rx="2" fill="' + ac + '" opacity="0.55"/><rect x="158" y="46" width="45" height="5" rx="2" fill="' + ac + '" opacity="0.4"/><rect x="158" y="58" width="70" height="10" rx="2" fill="' + ac + '" opacity="0.55"/><rect x="14" y="92" width="370" height="120" rx="5" fill="white" opacity="0.5"/><circle cx="38" cy="120" r="8" fill="' + ac + '" opacity="0.25"/><rect x="52" y="116" width="90" height="5" rx="2" fill="' + ac + '" opacity="0.3"/><rect x="295" y="114" width="55" height="12" rx="6" fill="#22c55e" opacity="0.35"/><circle cx="38" cy="144" r="8" fill="' + ac + '" opacity="0.2"/><rect x="52" y="140" width="80" height="5" rx="2" fill="' + ac + '" opacity="0.25"/><rect x="295" y="138" width="55" height="12" rx="6" fill="#f59e0b" opacity="0.35"/><circle cx="38" cy="168" r="8" fill="' + ac + '" opacity="0.22"/><rect x="52" y="164" width="100" height="5" rx="2" fill="' + ac + '" opacity="0.28"/><rect x="295" y="162" width="55" height="12" rx="6" fill="#22c55e" opacity="0.35"/><circle cx="38" cy="192" r="8" fill="' + ac + '" opacity="0.2"/><rect x="52" y="188" width="75" height="5" rx="2" fill="' + ac + '" opacity="0.22"/><rect x="295" y="186" width="55" height="12" rx="6" fill="#22c55e" opacity="0.3"/><rect x="396" y="92" width="190" height="120" rx="5" fill="white" opacity="0.5"/></svg>',
-      iot: '<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="220" fill="' + bg + '"/><line x1="0" y1="55" x2="600" y2="55" stroke="' + ac + '" stroke-width="0.5" opacity="0.12"/><line x1="0" y1="110" x2="600" y2="110" stroke="' + ac + '" stroke-width="0.5" opacity="0.12"/><line x1="0" y1="165" x2="600" y2="165" stroke="' + ac + '" stroke-width="0.5" opacity="0.12"/><line x1="150" y1="0" x2="150" y2="220" stroke="' + ac + '" stroke-width="0.5" opacity="0.1"/><line x1="300" y1="0" x2="300" y2="220" stroke="' + ac + '" stroke-width="0.5" opacity="0.1"/><line x1="450" y1="0" x2="450" y2="220" stroke="' + ac + '" stroke-width="0.5" opacity="0.1"/><circle cx="300" cy="110" r="60" fill="' + ac + '" opacity="0.07"/><circle cx="300" cy="110" r="38" fill="' + ac + '" opacity="0.11"/><circle cx="300" cy="110" r="20" fill="' + ac + '" opacity="0.22"/><path d="M268 68 Q300 40 332 68" stroke="' + ac + '" stroke-width="2" fill="none" opacity="0.4"/><path d="M250 50 Q300 12 350 50" stroke="' + ac + '" stroke-width="1.5" fill="none" opacity="0.22"/><line x1="300" y1="110" x2="76" y2="50" stroke="' + ac + '" stroke-width="1" opacity="0.28" stroke-dasharray="4,3"/><line x1="300" y1="110" x2="524" y2="50" stroke="' + ac + '" stroke-width="1" opacity="0.28" stroke-dasharray="4,3"/><line x1="300" y1="110" x2="76" y2="175" stroke="' + ac + '" stroke-width="1" opacity="0.28" stroke-dasharray="4,3"/><line x1="300" y1="110" x2="524" y2="175" stroke="' + ac + '" stroke-width="1" opacity="0.28" stroke-dasharray="4,3"/><rect x="42" y="28" width="68" height="44" rx="7" fill="white" opacity="0.72"/><rect x="490" y="28" width="68" height="44" rx="7" fill="white" opacity="0.72"/><rect x="42" y="152" width="68" height="44" rx="7" fill="white" opacity="0.72"/><rect x="490" y="152" width="68" height="44" rx="7" fill="white" opacity="0.72"/><rect x="288" y="100" width="24" height="20" rx="2" fill="white" opacity="0.85"/></svg>',
-      mobile: '<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="220" fill="' + bg + '"/><circle cx="490" cy="50" r="70" fill="' + ac + '" opacity="0.06"/><rect x="155" y="10" width="100" height="200" rx="14" fill="white" opacity="0.82"/><rect x="161" y="16" width="88" height="188" rx="10" fill="' + bg + '" opacity="0.55"/><rect x="192" y="18" width="26" height="5" rx="2" fill="' + ac + '" opacity="0.28"/><rect x="161" y="24" width="88" height="28" fill="' + ac + '" opacity="0.22"/><rect x="168" y="31" width="45" height="7" rx="3" fill="' + ac + '" opacity="0.55"/><rect x="168" y="62" width="76" height="28" rx="5" fill="white" opacity="0.68"/><rect x="168" y="96" width="76" height="28" rx="5" fill="white" opacity="0.5"/><rect x="168" y="130" width="76" height="28" rx="5" fill="white" opacity="0.5"/><rect x="168" y="168" width="76" height="28" rx="5" fill="' + ac + '" opacity="0.22"/><rect x="345" y="18" width="100" height="200" rx="14" fill="white" opacity="0.82"/><rect x="351" y="24" width="88" height="188" rx="10" fill="' + bg + '" opacity="0.55"/><rect x="382" y="26" width="26" height="5" rx="2" fill="' + ac + '" opacity="0.28"/><rect x="351" y="34" width="88" height="28" fill="' + ac + '" opacity="0.18"/><rect x="358" y="42" width="45" height="7" rx="3" fill="' + ac + '" opacity="0.45"/><rect x="358" y="72" width="36" height="36" rx="6" fill="' + ac + '" opacity="0.28"/><rect x="399" y="72" width="36" height="36" rx="6" fill="' + ac + '" opacity="0.18"/><rect x="358" y="114" width="36" height="36" rx="6" fill="' + ac + '" opacity="0.18"/><rect x="399" y="114" width="36" height="36" rx="6" fill="' + ac + '" opacity="0.3"/><rect x="358" y="168" width="77" height="28" rx="5" fill="' + ac + '" opacity="0.25"/></svg>',
-      inventory: '<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="220" fill="' + bg + '"/><rect width="600" height="26" fill="' + ac + '" opacity="0.15"/><circle cx="14" cy="13" r="4" fill="#ef4444" opacity="0.7"/><circle cx="26" cy="13" r="4" fill="#f59e0b" opacity="0.7"/><circle cx="38" cy="13" r="4" fill="#22c55e" opacity="0.7"/><rect x="14" y="34" width="240" height="26" rx="5" fill="white" opacity="0.58"/><rect x="268" y="34" width="90" height="26" rx="5" fill="' + ac + '" opacity="0.22"/><rect x="14" y="68" width="574" height="24" rx="3" fill="' + ac + '" opacity="0.1"/><rect x="14" y="96" width="574" height="22" rx="0" fill="white" opacity="0.38"/><rect x="14" y="118" width="574" height="22" rx="0" fill="white" opacity="0.25"/><rect x="14" y="140" width="574" height="22" rx="0" fill="white" opacity="0.38"/><rect x="14" y="162" width="574" height="22" rx="0" fill="white" opacity="0.25"/><rect x="14" y="184" width="574" height="22" rx="0" fill="white" opacity="0.38"/><rect x="400" y="100" width="55" height="13" rx="6" fill="#22c55e" opacity="0.3"/><rect x="400" y="122" width="55" height="13" rx="6" fill="#ef4444" opacity="0.2"/><rect x="400" y="144" width="55" height="13" rx="6" fill="#22c55e" opacity="0.3"/><rect x="400" y="166" width="55" height="13" rx="6" fill="#f59e0b" opacity="0.28"/><rect x="400" y="188" width="55" height="13" rx="6" fill="#22c55e" opacity="0.3"/></svg>',
-      sales: '<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="220" fill="' + bg + '"/><rect width="600" height="26" fill="' + ac + '" opacity="0.15"/><circle cx="14" cy="13" r="4" fill="#ef4444" opacity="0.7"/><circle cx="26" cy="13" r="4" fill="#f59e0b" opacity="0.7"/><circle cx="38" cy="13" r="4" fill="#22c55e" opacity="0.7"/><rect x="14" y="34" width="306" height="180" rx="5" fill="white" opacity="0.38"/><rect x="24" y="44" width="55" height="6" rx="3" fill="' + ac + '" opacity="0.4"/><rect x="24" y="60" width="84" height="60" rx="5" fill="white" opacity="0.68"/><rect x="116" y="60" width="84" height="60" rx="5" fill="white" opacity="0.68"/><rect x="208" y="60" width="84" height="60" rx="5" fill="white" opacity="0.68"/><rect x="36" y="68" width="60" height="32" rx="3" fill="' + ac + '" opacity="0.18"/><rect x="128" y="68" width="60" height="32" rx="3" fill="' + ac + '" opacity="0.14"/><rect x="220" y="68" width="60" height="32" rx="3" fill="' + ac + '" opacity="0.18"/><rect x="24" y="130" width="84" height="60" rx="5" fill="white" opacity="0.68"/><rect x="116" y="130" width="84" height="60" rx="5" fill="white" opacity="0.68"/><rect x="208" y="130" width="84" height="60" rx="5" fill="white" opacity="0.68"/><rect x="332" y="34" width="256" height="180" rx="5" fill="white" opacity="0.5"/><rect x="344" y="44" width="75" height="6" rx="3" fill="' + ac + '" opacity="0.45"/><rect x="344" y="68" width="130" height="5" rx="2" fill="' + ac + '" opacity="0.28"/><rect x="344" y="84" width="110" height="5" rx="2" fill="' + ac + '" opacity="0.22"/><rect x="344" y="100" width="120" height="5" rx="2" fill="' + ac + '" opacity="0.25"/><rect x="344" y="120" width="65" height="7" rx="3" fill="' + ac + '" opacity="0.38"/><rect x="460" y="118" width="76" height="12" rx="3" fill="' + ac + '" opacity="0.55"/><rect x="344" y="148" width="232" height="50" rx="7" fill="' + ac + '" opacity="0.28"/></svg>',
-    };
-    return svgs[type] || svgs['dashboard'];
+  /* ── Poster preview (matches the project tiles) ────────────────── */
+  function makePoster(data) {
+    function span(cls, text) {
+      var el = document.createElement('span');
+      el.className = cls;
+      el.textContent = text;
+      return el;
+    }
+    var num = (data.label.match(/^\d+/) || [''])[0];
+    var poster = document.createElement('div');
+    poster.className = 'poster';
+    poster.style.setProperty('--tone', data.color);
+    poster.setAttribute('aria-hidden', 'true');
+    poster.appendChild(span('poster-num', num));
+    poster.appendChild(span('poster-kicker', data.label.replace(' — ', ' / ')));
+    var foot = span('poster-foot', '');
+    foot.appendChild(span('poster-name', data.title));
+    foot.appendChild(span('poster-facts', data.tags.slice(0, 3).join(' · ')));
+    poster.appendChild(foot);
+    return poster;
   }
 
   /* ── Open modal ─────────────────────────────────────────────────── */
@@ -433,10 +387,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('cs-modal-label').textContent = data.label;
     document.getElementById('cs-modal-title').textContent = data.title;
 
-    /* svg preview */
-    var svgWrap = document.getElementById('cs-preview-svg');
-    svgWrap.innerHTML = makeSVG(data.svgBg, data.svgAc, data.svgType);
-    svgWrap.style.background = data.svgBg;
+    /* poster preview */
+    var previewWrap = document.getElementById('cs-preview-svg');
+    previewWrap.textContent = '';
+    previewWrap.appendChild(makePoster(data));
 
     /* meta row */
     var metaRow = document.getElementById('cs-meta-row');
@@ -541,4 +495,137 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
     initFilter();
   }
+})();
+
+/* API TERMINAL DEMO — types a request, then prints the response */
+
+(function () {
+  var DEMOS = {
+    taskapi: {
+      cmd: [
+        [['t-prompt', '$ '], ['', 'curl -X POST /api/v1/tasks \\']],
+        [['', '    -H "Authorization: Bearer •••" \\']],
+        [['', '    -d \'{"title":"Ship v2","category_id":3}\'']],
+      ],
+      out: [
+        [['t-status', 'HTTP/1.1 201 Created']],
+        [['', '{ '], ['t-key', '"data"'], ['', ': { '], ['t-key', '"id"'], ['', ': '], ['t-num', '42'], ['', ', '], ['t-key', '"title"'], ['', ': '], ['t-str', '"Ship v2"'], ['', ',']],
+        [['', '    '], ['t-key', '"is_completed"'], ['', ': '], ['t-num', 'false'], ['', ',']],
+        [['', '    '], ['t-key', '"category"'], ['', ': { '], ['t-key', '"id"'], ['', ': '], ['t-num', '3'], ['', ', '], ['t-key', '"name"'], ['', ': '], ['t-str', '"Work"'], ['', ' } } }']],
+      ],
+    },
+    ecommerceapi: {
+      cmd: [
+        [['t-prompt', '$ '], ['', 'curl -X POST /api/v1/orders \\']],
+        [['', '    -H "Authorization: Bearer •••" \\']],
+        [['', '    -d \'{"shipping_address":"Cebu City"}\'']],
+      ],
+      out: [
+        [['t-status', 'HTTP/1.1 201 Created']],
+        [['', '{ '], ['t-key', '"order"'], ['', ': { '], ['t-key', '"id"'], ['', ': '], ['t-num', '128'], ['', ', '], ['t-key', '"status"'], ['', ': '], ['t-str', '"pending"'], ['', ',']],
+        [['', '    '], ['t-key', '"total"'], ['', ': '], ['t-str', '"2499.00"'], ['', ' } }']],
+        [['t-dim', '# reverb ← order.status.updated: "processing"']],
+      ],
+    },
+  };
+
+  function seg(cls, text) {
+    var span = document.createElement('span');
+    if (cls) span.className = cls;
+    span.textContent = text;
+    return span;
+  }
+
+  function renderAll(body, demo) {
+    body.textContent = '';
+    demo.cmd.concat(demo.out).forEach(function (line) {
+      line.forEach(function (s) { body.appendChild(seg(s[0], s[1])); });
+      body.appendChild(document.createTextNode('\n'));
+    });
+    body.appendChild(seg('api-term-caret', ''));
+  }
+
+  function play(body, demo) {
+    var caret = seg('api-term-caret', '');
+    body.textContent = '';
+    body.appendChild(caret);
+
+    /* flatten the command into single characters */
+    var chars = [];
+    demo.cmd.forEach(function (line, li) {
+      line.forEach(function (s) {
+        s[1].split('').forEach(function (ch) { chars.push([s[0], ch]); });
+      });
+      if (li < demo.cmd.length - 1) chars.push(['', '\n']);
+    });
+
+    var i = 0;
+    (function typeNext() {
+      if (i < chars.length) {
+        body.insertBefore(seg(chars[i][0], chars[i][1]), caret);
+        i++;
+        setTimeout(typeNext, chars[i - 1][1] === '\n' ? 180 : 22);
+        return;
+      }
+      body.insertBefore(document.createTextNode('\n'), caret);
+      var li = 0;
+      (function printNext() {
+        if (li >= demo.out.length) return;
+        demo.out[li].forEach(function (s) { body.insertBefore(seg(s[0], s[1]), caret); });
+        body.insertBefore(document.createTextNode('\n'), caret);
+        li++;
+        setTimeout(printNext, li === 1 ? 450 : 120);
+      })();
+    })();
+  }
+
+  function init() {
+    var terms = document.querySelectorAll('.api-term');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    terms.forEach(function (term) {
+      var demo = DEMOS[term.dataset.api];
+      var body = term.querySelector('.api-term-body');
+      if (!demo || !body) return;
+
+      if (reduce || !('IntersectionObserver' in window)) {
+        renderAll(body, demo);
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          play(body, demo);
+          io.disconnect();
+        }
+      }, { threshold: 0.5 });
+      io.observe(term);
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+/* FOOTER YEAR — always show the current year */
+(function () {
+  var el = document.getElementById('footer-year');
+  if (el) el.textContent = new Date().getFullYear();
+})();
+
+/* PROFILE CARD — top of the right rail on wide screens,
+   moves into the sidebar when the rail is hidden */
+(function () {
+  var card = document.getElementById('profile-card');
+  var railSlot = document.getElementById('profile-slot-rail');
+  var sideSlot = document.getElementById('profile-slot-side');
+  if (!card || !railSlot || !sideSlot || !window.matchMedia) return;
+
+  var wide = window.matchMedia('(min-width: 1280px)');
+  function place() {
+    var target = wide.matches ? railSlot : sideSlot;
+    if (card.parentNode !== target) target.appendChild(card);
+  }
+  place();
+  if (wide.addEventListener) wide.addEventListener('change', place);
+  else if (wide.addListener) wide.addListener(place);
 })();
